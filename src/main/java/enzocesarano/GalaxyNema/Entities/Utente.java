@@ -43,6 +43,8 @@ public class Utente {
 
     private LocalDate update_at;
 
+    private String avatar;
+
     public Utente(String nome, String cognome, String username, String email, String password, String telefono, LocalDate data_nascita) {
         this.nome = nome;
         this.cognome = cognome;
@@ -53,5 +55,6 @@ public class Utente {
         this.data_nascita = data_nascita;
         this.created_at = LocalDate.now();
         this.role = RoleUtente.USER;
+        this.avatar = "https://ui-avatars.com/api/?name=" + this.getNome() + "+" + this.getCognome();
     }
 }
