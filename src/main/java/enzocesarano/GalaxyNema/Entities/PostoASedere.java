@@ -6,9 +6,7 @@ import enzocesarano.GalaxyNema.Entities.Enums.NumeroPosto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -16,19 +14,18 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class PostoASedere {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
     private UUID id_postoASedere;
-
+    @Enumerated(EnumType.STRING)
     private Fila fila;
+    @Enumerated(EnumType.STRING)
     private NumeroPosto numeroPosto;
 
-    private boolean is_premium;
+    private boolean premium;
 
-    @Value("${prezzo_base}")
     private double prezzo_base;
 
     @Setter(AccessLevel.NONE)
@@ -38,9 +35,8 @@ public class PostoASedere {
     @JsonBackReference
     private Ticket ticket;
 
-    public PostoASedere(Fila fila, NumeroPosto numeroPosto) {
-        this.fila = fila;
-        this.numeroPosto = numeroPosto;
+    public PostoASedere() {
         this.created_at = LocalDate.now();
+        this.prezzo_base = 5.00;
     }
 }

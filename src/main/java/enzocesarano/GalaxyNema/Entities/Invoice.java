@@ -30,13 +30,12 @@ public class Invoice {
     private String comune;
     private String provincia;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_ticket")
     @JsonManagedReference
     private Ticket ticket;
 
-    public Invoice(double importo, String via, String civico, String cap, String comune, String provincia) {
-        this.importo = importo;
+    public Invoice(String via, String civico, String cap, String comune, String provincia) {
         this.via = via;
         this.civico = civico;
         this.cap = cap;

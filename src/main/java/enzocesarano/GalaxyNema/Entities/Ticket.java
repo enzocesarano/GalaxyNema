@@ -6,7 +6,6 @@ import enzocesarano.GalaxyNema.Entities.Enums.StatoTicket;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -15,7 +14,6 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -40,17 +38,17 @@ public class Ticket {
     @JsonManagedReference
     private Proiezione proiezione;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_postoASedere")
     @JsonManagedReference
     private PostoASedere postoASedere;
 
-    @OneToOne(mappedBy = "ticket")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_ticket")
     @JsonBackReference
     private Invoice invoice;
 
-    public Ticket(double prezzo) {
-        this.prezzo = prezzo;
+    public Ticket() {
         this.statoTicket = StatoTicket.EMESSO;
         this.data_acquisto = LocalDate.now();
     }

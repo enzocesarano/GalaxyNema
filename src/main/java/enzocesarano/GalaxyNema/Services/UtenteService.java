@@ -1,6 +1,7 @@
 package enzocesarano.GalaxyNema.Services;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import enzocesarano.GalaxyNema.Entities.Ticket;
 import enzocesarano.GalaxyNema.Entities.Utente;
 import enzocesarano.GalaxyNema.Exceptions.BadRequestException;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,7 +60,63 @@ public class UtenteService {
         return this.utenteRepository.save(newUtente);
     }
 
+    public Utente findByIdAndUpdate(UUID userId, UtenteDTO body) {
+        Utente userFound = this.findById(userId);
+
+        if (!userFound.getEmail().equals(body.email())) {
+            this.utenteRepository.findByEmail(body.email()).ifPresent(
+                    user -> {
+                        throw new BadRequestException("Email " + body.email() + " già in uso!");
+                    }
+            );
+        }
+
+        if (!userFound.getUsername().equals(body.username())) {
+            this.utenteRepository.findByUsername(body.username()).ifPresent(
+                    user -> {
+                        throw new BadRequestException("Username " + body.username() + " già in uso!");
+                    }
+            );
+        }
+
+        userFound.setNome(body.nome());
+        userFound.setCognome(body.cognome());
+        userFound.setEmail(body.email());
+        userFound.setUsername(body.username());
+        userFound.setTelefono(body.telefono());
+        userFound.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
+        return this.utenteRepository.save(userFound);
+    }
+
+    public void findByIdAndDelete(UUID userId) {
+        Utente userFound = this.findById(userId);
+        this.utenteRepository.delete(userFound);
+    }
+
     public List<Ticket> ticketListByUtente(Utente currentAuthenticatedUser) {
         return ticketRepository.findByUtente(currentAuthenticatedUser);
+    }
+
+    public String uploadAvatar(MultipartFile file, Utente currentAuthenticatedUtente) {
+
+        if (file.isEmpty()) {
+            throw new BadRequestException("Il file dell'immagine non può essere vuoto");
+        }
+
+        String url = null;
+        try {
+            url = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        } catch (IOException e) {
+            throw new BadRequestException("Errore nel caricamento dell'immagine");
+        }
+
+        Utente utenteFound = this.findById(currentAuthenticatedUtente.getId_utente());
+        if (utenteFound == null) {
+            throw new BadRequestException("Utente non trovato con l'ID fornito");
+        }
+
+        utenteFound.setAvatar(url);
+        this.utenteRepository.save(utenteFound);
+        return url;
     }
 }

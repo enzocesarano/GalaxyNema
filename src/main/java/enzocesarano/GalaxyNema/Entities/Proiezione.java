@@ -5,17 +5,16 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Proiezione {
     @OneToMany(mappedBy = "proiezione")
     @JsonBackReference
@@ -24,8 +23,12 @@ public class Proiezione {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
     private UUID id_proiezione;
-    private LocalDate ora_inizio;
-    private LocalDate ora_fine;
+    @Column(name = "data_proiezione")
+    private LocalDate dataProiezione;
+    @Column(name = "ora_inizio")
+    private LocalDateTime oraInizio;
+    @Column(name = "ora_fine")
+    private LocalDateTime oraFine;
     private double moltiplicatore_prezzo;
     @Setter(AccessLevel.NONE)
     private LocalDate created_at;
@@ -38,10 +41,7 @@ public class Proiezione {
     @JsonManagedReference
     private Film film;
 
-    public Proiezione(LocalDate ora_inizio, LocalDate ora_fine, double moltiplicatore_prezzo) {
-        this.ora_inizio = ora_inizio;
-        this.ora_fine = ora_fine;
-        this.moltiplicatore_prezzo = moltiplicatore_prezzo;
+    public Proiezione() {
         this.created_at = LocalDate.now();
     }
 }

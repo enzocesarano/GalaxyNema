@@ -33,9 +33,9 @@ public class Sala {
 
     private LocalDate update_at;
 
-    public Sala(String nome, int numero_posti) {
+    public Sala(String nome) {
         this.nome = nome;
-        this.numero_posti = numero_posti;
         this.created_at = LocalDate.now();
+        this.numero_posti = 75;
     }
 }
