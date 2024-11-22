@@ -11,6 +11,6 @@ public record PostoASedereDTO(
         Fila fila,
 
         @NotNull(message = "Il numero del posto non può essere null.")
-        @Pattern(regexp = "^P[1-9]|P1[0-5]$", message = "Il numero del posto deve essere uno dei seguenti: P1, P2, ..., P15.")
+        @Pattern(regexp = "^P[1-9]|P1[0]$", message = "Il numero del posto deve essere uno dei seguenti: P1, P2, ..., P10.")
         NumeroPosto numeroPosto) {
 }
