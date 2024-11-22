@@ -20,6 +20,10 @@ public class Ticket {
     @Setter(AccessLevel.NONE)
     private UUID id_ticket;
 
+    private String nome;
+    private String cognome;
+    private LocalDate data_nascita;
+
     @Setter(AccessLevel.NONE)
     private LocalDate data_acquisto;
 
@@ -27,12 +31,7 @@ public class Ticket {
 
     @Enumerated(EnumType.STRING)
     private StatoTicket statoTicket;
-
-    @ManyToOne
-    @JoinColumn(name = "id_utente")
-    @JsonManagedReference
-    private Utente utente;
-
+    
     @ManyToOne
     @JoinColumn(name = "id_proiezione")
     @JsonManagedReference
@@ -43,10 +42,11 @@ public class Ticket {
     @JsonManagedReference
     private PostoASedere postoASedere;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_ticket")
+    @ManyToOne
+    @JoinColumn(name = "id_invoice")
     @JsonBackReference
     private Invoice invoice;
+
 
     public Ticket() {
         this.statoTicket = StatoTicket.EMESSO;

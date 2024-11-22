@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record InvoiceDTO(
 
         @NotBlank(message = "La via non può essere vuota.")
@@ -33,5 +35,7 @@ public record InvoiceDTO(
                 regexp = "^[A-Z]{2}$",
                 message = "La provincia deve essere composta da due lettere maiuscole."
         )
-        String provincia) {
+        String provincia,
+
+        List<TicketDTO> ticket) {
 }

@@ -2,17 +2,14 @@ package enzocesarano.GalaxyNema.Controllers;
 
 
 import enzocesarano.GalaxyNema.Entities.Film;
+import enzocesarano.GalaxyNema.Entities.Invoice;
 import enzocesarano.GalaxyNema.Entities.Proiezione;
-import enzocesarano.GalaxyNema.Entities.Ticket;
 import enzocesarano.GalaxyNema.Entities.Utente;
 import enzocesarano.GalaxyNema.Exceptions.BadRequestException;
-import enzocesarano.GalaxyNema.Services.FilmService;
-import enzocesarano.GalaxyNema.Services.ProiezioneService;
-import enzocesarano.GalaxyNema.Services.TicketService;
-import enzocesarano.GalaxyNema.Services.UtenteService;
+import enzocesarano.GalaxyNema.Services.*;
 import enzocesarano.GalaxyNema.dto.FilmDTO;
+import enzocesarano.GalaxyNema.dto.InvoiceDTO;
 import enzocesarano.GalaxyNema.dto.ProiezioneDTO;
-import enzocesarano.GalaxyNema.dto.TicketDTO;
 import enzocesarano.GalaxyNema.dto.UtenteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,17 +35,20 @@ public class UtenteController {
     @Autowired
     private ProiezioneService proiezioneService;
 
+    @Autowired
+    private InvoiceService invoiceService;
+
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public Utente getProfile(@AuthenticationPrincipal Utente currentAuthenticatedUser) {
         return currentAuthenticatedUser;
     }
 
-    @GetMapping("/me/tickets")
+    /*@GetMapping("/me/tickets")
     @ResponseStatus(HttpStatus.OK)
     public List<Ticket> ticketListByUtente(@AuthenticationPrincipal Utente currentAuthenticatedUser) {
         return utenteService.ticketListByUtente(currentAuthenticatedUser);
-    }
+    }*/
 
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
@@ -74,7 +73,7 @@ public class UtenteController {
         return this.utenteService.uploadAvatar(file, currentAuthenticatedUtente);
     }
 
-    @PostMapping("/me/tickets")
+    /*@PostMapping("/me/tickets")
     @ResponseStatus(HttpStatus.CREATED)
     public Ticket saveTicketByAdmin(@AuthenticationPrincipal Utente currentAuthenticatedUtente,
                                     @RequestParam UUID id_proiezione,
@@ -85,6 +84,18 @@ public class UtenteController {
             throw new BadRequestException("Errore nei dati forniti!");
         }
         return ticketService.saveTicket(id_proiezione, currentAuthenticatedUtente, body);
+    }*/
+
+    @PostMapping("me/invoices")
+    public Invoice createInvoice(@AuthenticationPrincipal Utente currentAuthenticatedUtente,
+                                 @RequestParam UUID id_proiezione,
+                                 @RequestBody @Validated InvoiceDTO body,
+                                 BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            validationResult.getAllErrors().forEach(System.out::println);
+            throw new BadRequestException("Errore nei dati forniti!");
+        }
+        return this.invoiceService.saveInvoice(body, currentAuthenticatedUtente, id_proiezione);
     }
 
     @PostMapping("/me/films")

@@ -36,6 +36,6 @@ public class Sala {
     public Sala(String nome) {
         this.nome = nome;
         this.created_at = LocalDate.now();
-        this.numero_posti = 75;
+        this.numero_posti = 50;
     }
 }

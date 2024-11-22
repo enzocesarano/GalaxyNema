@@ -2,7 +2,6 @@ package enzocesarano.GalaxyNema.Services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import enzocesarano.GalaxyNema.Entities.Ticket;
 import enzocesarano.GalaxyNema.Entities.Utente;
 import enzocesarano.GalaxyNema.Exceptions.BadRequestException;
 import enzocesarano.GalaxyNema.Exceptions.NotFoundException;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -55,6 +53,12 @@ public class UtenteService {
                     throw new BadRequestException("L'username " + body.username() + " è già in uso.");
                 }
         );
+
+        this.utenteRepository.findByEmail(body.email()).ifPresent(utente -> {
+                    throw new BadRequestException("La mail " + body.email() + " è già in uso.");
+                }
+        );
+
         Utente newUtente = new Utente(body.nome(), body.cognome(), body.username(), body.email(), bcryptencoder.encode(body.password()), body.telefono(), body.data_nascita());
         newUtente.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
         return this.utenteRepository.save(newUtente);
@@ -93,9 +97,6 @@ public class UtenteService {
         this.utenteRepository.delete(userFound);
     }
 
-    public List<Ticket> ticketListByUtente(Utente currentAuthenticatedUser) {
-        return ticketRepository.findByUtente(currentAuthenticatedUser);
-    }
 
     public String uploadAvatar(MultipartFile file, Utente currentAuthenticatedUtente) {
 

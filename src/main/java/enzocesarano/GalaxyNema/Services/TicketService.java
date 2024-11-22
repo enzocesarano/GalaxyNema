@@ -1,13 +1,10 @@
 package enzocesarano.GalaxyNema.Services;
 
-import enzocesarano.GalaxyNema.Entities.Enums.Fila;
-import enzocesarano.GalaxyNema.Entities.*;
-import enzocesarano.GalaxyNema.Exceptions.BadRequestException;
+import enzocesarano.GalaxyNema.Entities.Ticket;
 import enzocesarano.GalaxyNema.Exceptions.NotFoundException;
 import enzocesarano.GalaxyNema.Repositories.InvoiceRepository;
 import enzocesarano.GalaxyNema.Repositories.PostoASedereRepository;
 import enzocesarano.GalaxyNema.Repositories.TicketRepository;
-import enzocesarano.GalaxyNema.dto.TicketDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +36,7 @@ public class TicketService {
         return this.ticketRepository.findById(id_ticket).orElseThrow(() -> new NotFoundException("Il ticket con id: " + id_ticket + " non è stato trovato!"));
     }
 
-    public Ticket saveTicket(UUID id_proiezione, Utente utente, TicketDTO body) {
+    /*public Ticket saveTicket(UUID id_proiezione, Utente utente, TicketDTO body) {
         Proiezione proiezione1 = this.proiezioneService.findById(id_proiezione);
 
         Ticket ticket = new Ticket();
@@ -67,15 +64,14 @@ public class TicketService {
 
         ticket.setProiezione(proiezione1);
         ticket.setPostoASedere(newPosto);
-        ticket.setUtente(utente);
         Invoice newInvoice = new Invoice(body.invoice().via(), body.invoice().civico(), body.invoice().cap(), body.invoice().comune(), body.invoice().provincia());
         ticket.setInvoice(newInvoice);
-        newInvoice.setTicket(ticket);
+        newInvoice.getTicket().add(ticket);
 
         ticketRepository.save(ticket);
 
         return ticket;
-    }
+    }*/
 
 
     public void findByIdAndDelete(UUID id_ticket) {

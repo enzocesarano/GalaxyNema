@@ -25,7 +25,7 @@ import java.util.UUID;
 public class Utente implements UserDetails {
     @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE)
     @JsonBackReference
-    List<Ticket> tickets;
+    List<Invoice> invoice;
 
     @OneToMany(mappedBy = "admin")
     @JsonBackReference
