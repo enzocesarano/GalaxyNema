@@ -41,7 +41,7 @@ public class ProiezioneService {
     }
 
     public Page<Proiezione> findAll(int page, int size, String sortBy) {
-        if (size > 5) size = 5;
+        if (size > 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.proiezioneRepository.findAll(pageable);
     }

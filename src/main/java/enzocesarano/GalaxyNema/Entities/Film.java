@@ -28,6 +28,8 @@ public class Film {
     private UUID id_film;
 
     private String titolo;
+
+    @Column(length = 2048)
     private String descrizione;
     private int durata;
 
@@ -37,9 +39,11 @@ public class Film {
     private LocalDate data_uscita;
     private String poster_url;
     private String trailer_url;
+    private String backdrop_url;
+    private double vote_average;
 
     @Setter(AccessLevel.NONE)
-    private LocalDate created_at;
+    private LocalDate created_at = LocalDate.now();
 
     @ManyToOne
     @JoinColumn(name = "id_admin")
@@ -54,7 +58,6 @@ public class Film {
         this.data_uscita = data_uscita;
         this.poster_url = poster_url;
         this.trailer_url = trailer_url;
-        this.created_at = LocalDate.now();
     }
 }
 

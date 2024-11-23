@@ -1,6 +1,5 @@
 package enzocesarano.GalaxyNema.Entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,7 +16,7 @@ import java.util.UUID;
 @Setter
 public class Proiezione {
     @OneToMany(mappedBy = "proiezione")
-    @JsonBackReference
+    @JsonManagedReference
     List<Ticket> ticketList;
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

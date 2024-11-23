@@ -19,7 +19,7 @@ public class ProiezioneController {
     @ResponseStatus(HttpStatus.OK)
     public Page<Proiezione> getAllProiezioni(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "100") int size,
             @RequestParam(defaultValue = "dataProiezione") String sortBy) {
         return this.proiezioneService.findAll(page, size, sortBy);
     }

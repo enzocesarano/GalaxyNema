@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,5 +28,10 @@ public class FilmController {
     @ResponseStatus(HttpStatus.OK)
     public Film getById(@PathVariable("id_film") UUID id_film) {
         return this.filmService.findById(id_film);
+    }
+
+    @GetMapping("/tmdb")
+    public List<Film> getFilmsFromTmdb() {
+        return filmService.filmByTMDB();
     }
 }

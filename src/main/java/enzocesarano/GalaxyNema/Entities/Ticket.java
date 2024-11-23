@@ -31,10 +31,10 @@ public class Ticket {
 
     @Enumerated(EnumType.STRING)
     private StatoTicket statoTicket;
-    
+
     @ManyToOne
     @JoinColumn(name = "id_proiezione")
-    @JsonManagedReference
+    @JsonBackReference
     private Proiezione proiezione;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -31,11 +31,6 @@ public record FilmDTO(
         )
         String poster_url,
 
-        @NotBlank(message = "L'URL del trailer non può essere vuoto.")
-        @Pattern(
-                regexp = "^(http|https)://.*$",
-                message = "L'URL del trailer deve essere un link valido."
-        )
         String trailer_url
 ) {
 }

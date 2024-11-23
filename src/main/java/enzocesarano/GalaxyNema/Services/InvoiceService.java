@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +37,10 @@ public class InvoiceService {
     public Invoice saveInvoice(InvoiceDTO payload, Utente currentAuthenticatedUtente, UUID id_proiezione) {
         Proiezione proiezione1 = this.proiezioneService.findById(id_proiezione);
 
+        if (payload.ticket() == null || payload.ticket().isEmpty()) {
+            throw new BadRequestException("Il payload non contiene biglietti validi.");
+        }
+
         Invoice invoice = new Invoice(
                 payload.via(),
                 payload.civico(),
@@ -43,27 +48,31 @@ public class InvoiceService {
                 payload.comune(),
                 payload.provincia()
         );
-
         invoice.setUtente(currentAuthenticatedUtente);
 
         double importoTotale = 0.0;
         List<Ticket> ticketList = new ArrayList<>();
 
+        List<Ticket> proiezioneTickets = proiezione1.getTicketList();
+        if (proiezioneTickets == null) {
+            proiezioneTickets = new ArrayList<>();
+        }
+
         for (TicketDTO ticketDTO : payload.ticket()) {
             PostoASedere postoASedere = new PostoASedere();
 
-            boolean postoOccupato = proiezione1.getTicketList().stream()
+            boolean postoOccupato = proiezioneTickets.stream()
                     .anyMatch(t -> t.getPostoASedere().getFila() == ticketDTO.postoASedere().fila()
                             && t.getPostoASedere().getNumeroPosto() == ticketDTO.postoASedere().numeroPosto());
 
             if (postoOccupato) {
                 throw new BadRequestException("Il posto selezionato è già occupato.");
             }
+
             postoASedere.setFila(ticketDTO.postoASedere().fila());
             postoASedere.setNumeroPosto(ticketDTO.postoASedere().numeroPosto());
 
             Ticket ticket = new Ticket();
-
             if (ticketDTO.postoASedere().fila() == Fila.D) {
                 postoASedere.setPremium(true);
                 ticket.setPrezzo((postoASedere.getPrezzo_base() + 3.00) * proiezione1.getMoltiplicatore_prezzo());
@@ -71,9 +80,14 @@ public class InvoiceService {
                 ticket.setPrezzo(postoASedere.getPrezzo_base() * proiezione1.getMoltiplicatore_prezzo());
             }
 
+            try {
+                ticket.setData_nascita(LocalDate.parse(ticketDTO.data_nascita()));
+            } catch (DateTimeParseException e) {
+                throw new BadRequestException("Formato della data di nascita non valido: " + ticketDTO.data_nascita());
+            }
+
             ticket.setNome(ticketDTO.nome());
             ticket.setCognome(ticketDTO.cognome());
-            ticket.setData_nascita(LocalDate.parse(ticketDTO.data_nascita()));
             ticket.setPostoASedere(postoASedere);
             ticket.setInvoice(invoice);
             ticket.setProiezione(proiezione1);
@@ -84,6 +98,8 @@ public class InvoiceService {
 
         invoice.setTicket(ticketList);
         invoice.setImporto(importoTotale);
+
+        // Salva l'invoice
         return this.invoiceRepository.save(invoice);
     }
 
