@@ -1,5 +1,6 @@
 package enzocesarano.GalaxyNema.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -37,7 +38,7 @@ public class Proiezione {
     private Sala sala;
     @ManyToOne
     @JoinColumn(name = "id_film")
-    @JsonManagedReference
+    @JsonBackReference
     private Film film;
 
     public Proiezione() {

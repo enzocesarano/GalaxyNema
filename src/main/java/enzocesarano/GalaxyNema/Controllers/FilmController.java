@@ -1,5 +1,6 @@
 package enzocesarano.GalaxyNema.Controllers;
 
+import enzocesarano.GalaxyNema.Entities.Enums.GenereFilm;
 import enzocesarano.GalaxyNema.Entities.Film;
 import enzocesarano.GalaxyNema.Services.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +25,32 @@ public class FilmController {
                                    @RequestParam(defaultValue = "titolo") String sortBy) {
         return this.filmService.findAll(page, size, sortBy);
     }
+
+    @GetMapping("/filters")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<Film> getFilmsWithFilters(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size,
+                                          @RequestParam(defaultValue = "titolo") String sortBy,
+                                          @RequestParam(required = false) String titolo,
+                                          @RequestParam(required = false) GenereFilm genere,
+                                          @RequestParam(required = false) Double minVoteAverage,
+                                          @RequestParam(required = false) Double maxVoteAverage,
+                                          @RequestParam(required = false) LocalDate proiezioneAfter,
+                                          @RequestParam(required = false) LocalDate proiezioneBefore
+    ) {
+        return this.filmService.findAllWithProiezioni(
+                page,
+                size,
+                sortBy,
+                titolo,
+                genere,
+                minVoteAverage,
+                maxVoteAverage,
+                proiezioneAfter,
+                proiezioneBefore
+        );
+    }
+
 
     @GetMapping("/{id_film}")
     @ResponseStatus(HttpStatus.OK)

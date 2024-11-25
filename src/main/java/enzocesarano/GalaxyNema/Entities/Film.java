@@ -1,6 +1,5 @@
 package enzocesarano.GalaxyNema.Entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import enzocesarano.GalaxyNema.Entities.Enums.GenereFilm;
 import jakarta.persistence.*;
@@ -19,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Film {
     @OneToMany(mappedBy = "film")
-    @JsonBackReference
+    @JsonManagedReference
     List<Proiezione> proiezioneList;
 
     @Id
@@ -36,11 +35,13 @@ public class Film {
     @Enumerated(EnumType.STRING)
     private GenereFilm genere;
 
-    private LocalDate data_uscita;
+    @Column(name = "data_uscita")
+    private LocalDate dataUscita;
     private String poster_url;
     private String trailer_url;
     private String backdrop_url;
-    private double vote_average;
+    @Column(name = "vote_average")
+    private double voteAverage;
 
     @Setter(AccessLevel.NONE)
     private LocalDate created_at = LocalDate.now();
@@ -55,7 +56,7 @@ public class Film {
         this.descrizione = descrizione;
         this.durata = durata;
         this.genere = genere;
-        this.data_uscita = data_uscita;
+        this.dataUscita = data_uscita;
         this.poster_url = poster_url;
         this.trailer_url = trailer_url;
     }
