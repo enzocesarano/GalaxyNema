@@ -26,10 +26,19 @@ public class FilmController {
         return this.filmService.findAll(page, size, sortBy);
     }
 
+    @GetMapping("/senzaproiezioni")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<Film> findAllWithoutProiezioni(@RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "50") int size,
+                                               @RequestParam(defaultValue = "titolo") String sortBy
+    ) {
+        return this.filmService.findAllWithoutProiezioni(page, size, sortBy);
+    }
+
     @GetMapping("/filters")
     @ResponseStatus(HttpStatus.OK)
     public Page<Film> getFilmsWithFilters(@RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "10") int size,
+                                          @RequestParam(defaultValue = "50") int size,
                                           @RequestParam(defaultValue = "titolo") String sortBy,
                                           @RequestParam(required = false) String titolo,
                                           @RequestParam(required = false) GenereFilm genere,

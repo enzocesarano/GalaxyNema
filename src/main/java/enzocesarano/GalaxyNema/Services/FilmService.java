@@ -43,10 +43,21 @@ public class FilmService {
     }
 
     public Page<Film> findAll(int page, int size, String sortBy) {
-        if (size > 30) size = 30;
+        if (size > 50) size = 50;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.filmRepository.findAll(pageable);
     }
+
+    public Page<Film> findAllWithoutProiezioni(int page, int size, String sortBy) {
+        if (size > 50) size = 50;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Specification<Film> spec = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.isEmpty(root.get("proiezioneList")));
+
+        return this.filmRepository.findAll(spec, pageable);
+    }
+
 
     public Page<Film> findAllWithProiezioni(int page, int size, String sortBy, String titolo, GenereFilm genere,
                                             Double minVoteAverage, Double maxVoteAverage,
@@ -77,7 +88,6 @@ public class FilmService {
                     criteriaBuilder.lessThanOrEqualTo(root.get("voteAverage"), maxVoteAverage));
         }
 
-        // Filtro per data di proiezione
         if (proiezioneAfter != null) {
             spec = spec.and((root, query, criteriaBuilder) -> {
                 Join<Object, Object> proiezioni = root.join("proiezioneList");
