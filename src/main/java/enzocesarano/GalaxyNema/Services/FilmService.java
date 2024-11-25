@@ -154,7 +154,7 @@ public class FilmService {
     public List<Film> filmByTMDB() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=it-IT&page=1&primary_release_year=2024&sort_by=popularity.desc")
+                .url("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=it-IT&page=2&primary_release_year=2024&sort_by=popularity.desc")
                 .get()
                 .addHeader("accept", "application/json")
                 .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZDc0MzQ5OTFjMGE3NDFkYTIzYmUyYTRkYTJmMWIzOCIsIm5iZiI6MTczMjM3MzY1Mi40NjM5MzUsInN1YiI6IjY3M2I2YjE0YzY0MTJiMzY2OTY1NDc1MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ce4LtoZsK8wy62mifDy5P2nF1901lGhCqi1_z9zlWjs")
