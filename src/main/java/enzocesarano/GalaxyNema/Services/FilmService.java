@@ -16,6 +16,7 @@ import enzocesarano.GalaxyNema.Repositories.FilmRepository;
 import enzocesarano.GalaxyNema.dto.FilmDTO;
 import jakarta.persistence.criteria.Join;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,12 @@ public class FilmService {
 
     @Autowired
     private UtenteService utenteService;
+
+    @Value("${news_api_key}")
+    private String newsApi;
+
+    @Value("${auth_tmdb}")
+    private String authTmdb;
 
     public Film findById(UUID id_film) {
         return this.filmRepository.findById(id_film).orElseThrow(() -> new NotFoundException(id_film));
@@ -66,7 +73,7 @@ public class FilmService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
 
         Specification<Film> spec = Specification.where((root, query, criteriaBuilder) ->
-                criteriaBuilder.isNotEmpty(root.get("proiezioneList"))); // Filtro per proiezioni non vuote
+                criteriaBuilder.isNotEmpty(root.get("proiezioneList")));
 
         if (titolo != null && !titolo.isEmpty()) {
             spec = spec.and((root, query, criteriaBuilder) ->
@@ -157,7 +164,7 @@ public class FilmService {
                 .url("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=it-IT&page=2&primary_release_year=2024&sort_by=popularity.desc")
                 .get()
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZDc0MzQ5OTFjMGE3NDFkYTIzYmUyYTRkYTJmMWIzOCIsIm5iZiI6MTczMjM3MzY1Mi40NjM5MzUsInN1YiI6IjY3M2I2YjE0YzY0MTJiMzY2OTY1NDc1MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ce4LtoZsK8wy62mifDy5P2nF1901lGhCqi1_z9zlWjs")
+                .addHeader("Authorization", "Bearer " + authTmdb)
                 .build();
 
         List<Film> films = new ArrayList<>();
@@ -177,7 +184,7 @@ public class FilmService {
                                 .url("https://api.themoviedb.org/3/movie/" + movieId + "?language=it-IT")
                                 .get()
                                 .addHeader("accept", "application/json")
-                                .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZDc0MzQ5OTFjMGE3NDFkYTIzYmUyYTRkYTJmMWIzOCIsIm5iZiI6MTczMjM3MzY1Mi40NjM5MzUsInN1YiI6IjY3M2I2YjE0YzY0MTJiMzY2OTY1NDc1MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ce4LtoZsK8wy62mifDy5P2nF1901lGhCqi1_z9zlWjs")
+                                .addHeader("Authorization", "Bearer " + authTmdb)
                                 .build();
 
                         Response detailResponse = client.newCall(detailRequest).execute();
@@ -219,5 +226,29 @@ public class FilmService {
         return films;
     }
 
+
+    public String getCinemaNews() {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("https://newsapi.org/v2/everything?q=cinema&language=it&apiKey=" + newsApi + "&pageSize=30&sortBy=publishedAt")
+                .get()
+                .addHeader("accept", "application/json")
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return response.body().string();
+            } else {
+
+                String errorBody = response.body() != null ? response.body().string() : "No error message";
+                return "{\"error\": \"Unable to fetch news\", \"details\": \"" + errorBody + "\"}";
+            }
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            return "{\"error\": \"Internal server error\", \"details\": \"" + e.getMessage() + "\"}";
+        }
+    }
 
 }

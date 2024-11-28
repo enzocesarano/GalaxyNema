@@ -71,4 +71,9 @@ public class FilmController {
     public List<Film> getFilmsFromTmdb() {
         return filmService.filmByTMDB();
     }
+
+    @GetMapping("/news")
+    public String getCinemaNews() {
+        return filmService.getCinemaNews();
+    }
 }
