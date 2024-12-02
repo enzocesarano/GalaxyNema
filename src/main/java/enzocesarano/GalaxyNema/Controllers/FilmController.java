@@ -68,8 +68,8 @@ public class FilmController {
     }
 
     @GetMapping("/tmdb")
-    public List<Film> getFilmsFromTmdb() {
-        return filmService.filmByTMDB();
+    public List<Film> getFilmsFromTmdb(@RequestParam int number) {
+        return filmService.filmByTMDB(number);
     }
 
     @GetMapping("/news")

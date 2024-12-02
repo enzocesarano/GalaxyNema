@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +31,14 @@ public class Utente implements UserDetails {
     @OneToMany(mappedBy = "admin")
     @JsonBackReference
     List<Film> filmList;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "utente_film_preferiti",
+            joinColumns = @JoinColumn(name = "id_utente"),
+            inverseJoinColumns = @JoinColumn(name = "id_film")
+    )
+    private List<Film> preferiti = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -68,5 +77,4 @@ public class Utente implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
-
 }

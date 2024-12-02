@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,9 +17,9 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Proiezione {
-    @OneToMany(mappedBy = "proiezione")
+    @OneToMany(mappedBy = "proiezione", fetch = FetchType.EAGER)
     @JsonManagedReference
-    List<Ticket> ticketList;
+    List<Ticket> ticketList = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
@@ -36,7 +37,7 @@ public class Proiezione {
     @JoinColumn(name = "id_sala")
     @JsonManagedReference
     private Sala sala;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_film")
     @JsonBackReference
     private Film film;

@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,6 +38,9 @@ public class UtenteController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private PreferitoService preferitoService;
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
@@ -136,5 +140,24 @@ public class UtenteController {
     public void deleteProiezione(@AuthenticationPrincipal Utente currentAuthenticatedUtente,
                                  @PathVariable("id_proiezione") UUID id_proiezione) {
         this.proiezioneService.findByIdAndDelete(id_proiezione, currentAuthenticatedUtente);
+    }
+
+    @GetMapping("me/films/preferiti")
+    public List<Film> getPreferiti(@AuthenticationPrincipal Utente utente) {
+        return utente.getPreferiti();
+    }
+
+    @PostMapping("/me/films/{id_film}/preferiti")
+    @ResponseStatus(HttpStatus.OK)
+    public Film aggiungiFilmAiPreferiti(@AuthenticationPrincipal Utente currentAuthenticatedUtente,
+                                        @PathVariable("id_film") UUID id_film) {
+        return this.preferitoService.aggiungiPreferito(currentAuthenticatedUtente.getId_utente(), id_film);
+    }
+
+    @DeleteMapping("/me/films/{id_film}/preferiti")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void rimuoviFilmDaiPreferiti(@AuthenticationPrincipal Utente currentAuthenticatedUtente,
+                                        @PathVariable("id_film") UUID id_film) {
+        this.preferitoService.rimuoviPreferito(currentAuthenticatedUtente.getId_utente(), id_film);
     }
 }

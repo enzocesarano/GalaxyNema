@@ -1,5 +1,7 @@
 package enzocesarano.GalaxyNema.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import enzocesarano.GalaxyNema.Entities.Enums.GenereFilm;
 import jakarta.persistence.*;
@@ -16,10 +18,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties("admin")
 public class Film {
-    @OneToMany(mappedBy = "film")
+    @OneToMany(mappedBy = "film", fetch = FetchType.EAGER)
     @JsonManagedReference
     List<Proiezione> proiezioneList;
+
+    @ManyToMany
+    @JsonIgnore
+    private List<Utente> utenteList;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -5,7 +5,6 @@ import com.cloudinary.utils.ObjectUtils;
 import enzocesarano.GalaxyNema.Entities.Utente;
 import enzocesarano.GalaxyNema.Exceptions.BadRequestException;
 import enzocesarano.GalaxyNema.Exceptions.NotFoundException;
-import enzocesarano.GalaxyNema.Repositories.TicketRepository;
 import enzocesarano.GalaxyNema.Repositories.UtenteRepository;
 import enzocesarano.GalaxyNema.dto.UtenteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,6 @@ public class UtenteService {
     private PasswordEncoder bcryptencoder;
     @Autowired
     private Cloudinary cloudinaryUploader;
-
-    @Autowired
-    private TicketRepository ticketRepository;
 
 
     public Utente findByUsername(String username) {

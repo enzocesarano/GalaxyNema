@@ -26,9 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FilmService {
@@ -158,16 +156,17 @@ public class FilmService {
         this.filmRepository.delete(film);
     }
 
-    public List<Film> filmByTMDB() {
+    public List<Film> filmByTMDB(int number) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=it-IT&page=2&primary_release_year=2024&sort_by=popularity.desc")
+                .url("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=it-IT&page=" + number + "&primary_release_year=2024&sort_by=popularity.desc")
                 .get()
                 .addHeader("accept", "application/json")
                 .addHeader("Authorization", "Bearer " + authTmdb)
                 .build();
 
         List<Film> films = new ArrayList<>();
+        Set<String> existingTitles = new HashSet<>();
 
         try {
             Response response = client.newCall(request).execute();
@@ -179,6 +178,12 @@ public class FilmService {
                 if (rootNode != null && rootNode.isArray()) {
                     for (JsonNode movieNode : rootNode) {
                         String movieId = movieNode.get("id").asText();
+                        String movieTitle = movieNode.get("title").asText();
+
+                        if (existingTitles.contains(movieTitle)) {
+                            continue;
+                        }
+                        existingTitles.add(movieTitle);
 
                         Request detailRequest = new Request.Builder()
                                 .url("https://api.themoviedb.org/3/movie/" + movieId + "?language=it-IT")
@@ -204,15 +209,19 @@ public class FilmService {
                                 film.setBackdrop_url("https://image.tmdb.org/t/p/w1280" + detailNode.get("backdrop_path").asText());
                             }
 
-                            if (detailNode.get("video").asText().isEmpty()) {
+                            if (detailNode.get("video") != null && !detailNode.get("video").asText().isEmpty()) {
                                 film.setTrailer_url("https://www.youtube.com/watch?v=" + detailNode.get("video").asText());
                             }
-                            film.setGenere(GenereFilm.valueOf(detailNode.get("genres").get(0).get("name").asText().toUpperCase()));
 
-                            Utente utente = this.utenteService.findById(UUID.fromString("7e5aa853-a555-4396-b773-73a2f94d991d"));
+                            String genreName = detailNode.get("genres").get(0).get("name").asText().toUpperCase();
+                            if ("TELEVISIONE FILM".equals(genreName)) {
+                                genreName = "TELEVISIONE_FILM";  // Replace genre
+                            }
+                            film.setGenere(GenereFilm.valueOf(genreName));
+
+                            Utente utente = this.utenteService.findById(UUID.fromString("b64fcfd3-4c85-46a9-a37d-207f1a5adf94"));
                             film.setAdmin(utente);
                             films.add(film);
-
                         }
                     }
                 }
@@ -221,8 +230,7 @@ public class FilmService {
             e.printStackTrace();
         }
 
-        this.filmRepository.saveAll(films);
-
+        this.filmRepository.saveAll(films);  // Save all unique films
         return films;
     }
 
