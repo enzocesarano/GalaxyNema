@@ -13,8 +13,8 @@ COPY . /app
 # Esegui il build con Maven, generando il file JAR
 RUN mvn clean package -DskipTests
 
-# Copia il file JAR creato dalla cartella target nella cartella di lavoro del container
-COPY target/GalaxyNema-0.0.1-SNAPSHOT.jar /app/GalaxyNema.jar
+# Copia il JAR generato dalla cartella personalizzata nel container
+COPY jar/GalaxyNema-0.0.1-SNAPSHOT.jar /app/GalaxyNema.jar
 
 # Esponi la porta 8080 (porta predefinita di Spring Boot)
 EXPOSE 8080
