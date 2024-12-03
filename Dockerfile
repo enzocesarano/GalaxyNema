@@ -1,14 +1,23 @@
-# Usa un'immagine con OpenJDK
-FROM openjdk:17-jdk-slim
+# Usa un'immagine base con Java e Maven
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 
-# Imposta il directory di lavoro dentro il container
+# Imposta la cartella di lavoro
 WORKDIR /app
 
-# Copia il JAR del tuo progetto nella cartella /app del container
-COPY custom_output_folder/GalaxyNema-0.0.1-SNAPSHOT.jar /app/GalaxyNema.jar
+# Copia il pom.xml e il codice sorgente
+COPY pom.xml .
+COPY src ./src
 
-# Esponi la porta su cui Spring Boot ascolta
+# Costruisci l'applicazione
+RUN mvn clean package -DskipTests
+
+# Usa un'immagine leggera per il runtime
+FROM openjdk:17-jdk-slim
+
+# Copia l'applicazione costruita dall'immagine precedente
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 
-# Comando per avviare l'applicazione Spring Boot
-ENTRYPOINT ["java", "-jar", "GalaxyNema.jar"]
+
+# Comando per avviare l'applicazione
+ENTRYPOINT ["java", "-jar", "/app.jar"]
