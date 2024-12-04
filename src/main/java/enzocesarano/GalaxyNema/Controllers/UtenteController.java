@@ -1,10 +1,7 @@
 package enzocesarano.GalaxyNema.Controllers;
 
 
-import enzocesarano.GalaxyNema.Entities.Film;
-import enzocesarano.GalaxyNema.Entities.Invoice;
-import enzocesarano.GalaxyNema.Entities.Proiezione;
-import enzocesarano.GalaxyNema.Entities.Utente;
+import enzocesarano.GalaxyNema.Entities.*;
 import enzocesarano.GalaxyNema.Exceptions.BadRequestException;
 import enzocesarano.GalaxyNema.Services.*;
 import enzocesarano.GalaxyNema.dto.FilmDTO;
@@ -159,5 +156,17 @@ public class UtenteController {
     public void rimuoviFilmDaiPreferiti(@AuthenticationPrincipal Utente currentAuthenticatedUtente,
                                         @PathVariable("id_film") UUID id_film) {
         this.preferitoService.rimuoviPreferito(currentAuthenticatedUtente.getId_utente(), id_film);
+    }
+
+    @GetMapping("/me/invoices")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Invoice> getInvoicesByUtente(@AuthenticationPrincipal Utente utente) {
+        return this.invoiceService.getInvoicesByUtente(utente);
+    }
+
+    @PutMapping("/tickets/{id_ticket}")
+    @ResponseStatus(HttpStatus.OK)
+    public Ticket findByIdAndUpdate(@PathVariable("id_ticket") UUID id_ticket) {
+        return this.ticketService.findByIdAndUpdate(id_ticket);
     }
 }

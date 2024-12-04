@@ -1,5 +1,6 @@
 package enzocesarano.GalaxyNema.Services;
 
+import enzocesarano.GalaxyNema.Entities.Enums.StatoTicket;
 import enzocesarano.GalaxyNema.Entities.Ticket;
 import enzocesarano.GalaxyNema.Exceptions.NotFoundException;
 import enzocesarano.GalaxyNema.Repositories.InvoiceRepository;
@@ -78,4 +79,12 @@ public class TicketService {
         Ticket ticket = this.findById(id_ticket);
         this.ticketRepository.delete(ticket);
     }
+
+    public Ticket findByIdAndUpdate(UUID id_ticket) {
+        Ticket ticket = this.findById(id_ticket);
+        ticket.setStatoTicket(StatoTicket.USATO);
+        return this.ticketRepository.save(ticket);
+    }
+
+
 }

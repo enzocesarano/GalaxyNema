@@ -25,6 +25,9 @@ public class InvoiceService {
     @Autowired
     private ProiezioneService proiezioneService;
 
+    @Autowired
+    private UtenteService utenteService;
+
     public Invoice findById(UUID id_invoice) {
         return this.invoiceRepository.findById(id_invoice).orElseThrow(() -> new NotFoundException(id_invoice));
     }
@@ -101,6 +104,17 @@ public class InvoiceService {
 
         // Salva l'invoice
         return this.invoiceRepository.save(invoice);
+    }
+
+    public List<Invoice> getInvoicesByUtente(Utente utenteCorrente) {
+        Utente utente = this.utenteService.findById(utenteCorrente.getId_utente());
+        List<Invoice> invoices = utente.getInvoice();
+
+        if (invoices.isEmpty()) {
+            throw new RuntimeException("Nessun ticket trovato per l'utente specificato");
+        }
+
+        return invoices;
     }
 
 }
