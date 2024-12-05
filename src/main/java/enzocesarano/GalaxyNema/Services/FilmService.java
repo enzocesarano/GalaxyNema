@@ -96,14 +96,14 @@ public class FilmService {
         if (proiezioneAfter != null) {
             spec = spec.and((root, query, criteriaBuilder) -> {
                 Join<Object, Object> proiezioni = root.join("proiezioneList");
-                return criteriaBuilder.greaterThanOrEqualTo(proiezioni.get("data"), proiezioneAfter);
+                return criteriaBuilder.greaterThanOrEqualTo(proiezioni.get("dataProiezione"), proiezioneAfter);
             });
         }
 
         if (proiezioneBefore != null) {
             spec = spec.and((root, query, criteriaBuilder) -> {
                 Join<Object, Object> proiezioni = root.join("proiezioneList");
-                return criteriaBuilder.lessThanOrEqualTo(proiezioni.get("data"), proiezioneBefore);
+                return criteriaBuilder.lessThanOrEqualTo(proiezioni.get("dataProiezione"), proiezioneBefore);
             });
         }
 
