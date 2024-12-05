@@ -2,6 +2,7 @@ package enzocesarano.GalaxyNema.Services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import enzocesarano.GalaxyNema.Entities.Enums.RoleUtente;
 import enzocesarano.GalaxyNema.Entities.Utente;
 import enzocesarano.GalaxyNema.Exceptions.BadRequestException;
 import enzocesarano.GalaxyNema.Exceptions.NotFoundException;
@@ -115,5 +116,13 @@ public class UtenteService {
         utenteFound.setAvatar(url);
         this.utenteRepository.save(utenteFound);
         return url;
+    }
+
+    public Utente cambiaRole(UUID id_utente) {
+        Utente utente = this.findById(id_utente);
+        if (utente.getRole() == RoleUtente.USER) {
+            utente.setRole(RoleUtente.ADMIN);
+        }
+        return this.utenteRepository.save(utente);
     }
 }

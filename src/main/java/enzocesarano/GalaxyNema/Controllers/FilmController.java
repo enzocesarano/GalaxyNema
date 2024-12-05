@@ -67,9 +67,9 @@ public class FilmController {
         return this.filmService.findById(id_film);
     }
 
-    @GetMapping("/tmdb")
-    public List<Film> getFilmsFromTmdb(@RequestParam int number) {
-        return filmService.filmByTMDB(number);
+    @GetMapping("/{id_utente}/tmdb")
+    public List<Film> getFilmsFromTmdb(@PathVariable("id_utente") UUID id_utente, @RequestParam int number) {
+        return filmService.filmByTMDB(id_utente, number);
     }
 
     @GetMapping("/news")

@@ -156,7 +156,7 @@ public class FilmService {
         this.filmRepository.delete(film);
     }
 
-    public List<Film> filmByTMDB(int number) {
+    public List<Film> filmByTMDB(UUID utente1, int number) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=it-IT&page=" + number + "&primary_release_year=2024&sort_by=popularity.desc")
@@ -219,7 +219,7 @@ public class FilmService {
                             }
                             film.setGenere(GenereFilm.valueOf(genreName));
 
-                            Utente utente = this.utenteService.findById(UUID.fromString("b64fcfd3-4c85-46a9-a37d-207f1a5adf94"));
+                            Utente utente = this.utenteService.findById(utente1);
                             film.setAdmin(utente);
                             films.add(film);
                         }

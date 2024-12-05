@@ -169,4 +169,10 @@ public class UtenteController {
     public Ticket findByIdAndUpdate(@PathVariable("id_ticket") UUID id_ticket) {
         return this.ticketService.findByIdAndUpdate(id_ticket);
     }
+
+    @PutMapping("/{id_utente}")
+    @ResponseStatus(HttpStatus.OK)
+    public Utente cambiaRole(@PathVariable("id_utente") UUID id_utente) {
+        return this.utenteService.cambiaRole(id_utente);
+    }
 }
