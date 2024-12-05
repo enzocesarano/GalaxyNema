@@ -14,5 +14,7 @@ public record TicketDTO(
         @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "La data di nascita deve essere nel formato YYYY-MM-DD.")
         String data_nascita,
 
+        @NotBlank(message = "Il prezzo non può essere nullo.")
+        Double price,
         PostoASedereDTO postoASedere) {
 }
