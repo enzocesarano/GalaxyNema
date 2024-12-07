@@ -56,8 +56,18 @@ public class UtenteService {
                 }
         );
 
-        Utente newUtente = new Utente(body.nome(), body.cognome(), body.username(), body.email(), bcryptencoder.encode(body.password()), body.telefono(), body.data_nascita());
+        Utente newUtente = new Utente(
+                body.nome(),
+                body.cognome(),
+                body.username(),
+                body.email(),
+                bcryptencoder.encode(body.password()),
+                body.telefono(),
+                body.data_nascita()
+        );
+
         newUtente.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
+
         return this.utenteRepository.save(newUtente);
     }
 
@@ -86,8 +96,14 @@ public class UtenteService {
         userFound.setUsername(body.username());
         userFound.setTelefono(body.telefono());
         userFound.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
+
+        if (body.password() != null && !body.password().isEmpty()) {
+            userFound.setPassword(bcryptencoder.encode(body.password()));
+        }
+
         return this.utenteRepository.save(userFound);
     }
+
 
     public void findByIdAndDelete(UUID userId) {
         Utente userFound = this.findById(userId);
