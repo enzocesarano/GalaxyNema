@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 public class UtenteController {
@@ -55,11 +56,14 @@ public class UtenteController {
     @ResponseStatus(HttpStatus.OK)
     public Utente updateProfile(@AuthenticationPrincipal Utente currentAuthenticatedUser, @RequestBody @Validated UtenteDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
-            validationResult.getAllErrors().forEach(System.out::println);
-            throw new BadRequestException("Errore nel payload!");
+            String message = validationResult.getAllErrors().stream()
+                    .map(objectError -> objectError.getDefaultMessage())
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException("Errore nel payload! " + message);
         }
         return this.utenteService.findByIdAndUpdate(currentAuthenticatedUser.getId_utente(), body);
     }
+
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
