@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -98,6 +99,8 @@ public class UtenteService {
         if (userFound.getAvatar().contains("https://ui-avatars.com/api/?name=")) {
             userFound.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
         }
+
+        userFound.setUpdate_at(LocalDate.now());
 
         if (body.password() != null && !body.password().isEmpty()) {
             userFound.setPassword(bcryptencoder.encode(body.password()));
