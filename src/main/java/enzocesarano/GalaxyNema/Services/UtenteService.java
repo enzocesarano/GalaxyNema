@@ -95,7 +95,9 @@ public class UtenteService {
         userFound.setEmail(body.email());
         userFound.setUsername(body.username());
         userFound.setTelefono(body.telefono());
-        userFound.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
+        if (userFound.getAvatar().contains("https://ui-avatars.com/api/?name=")) {
+            userFound.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
+        }
 
         if (body.password() != null && !body.password().isEmpty()) {
             userFound.setPassword(bcryptencoder.encode(body.password()));
