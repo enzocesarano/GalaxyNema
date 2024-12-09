@@ -39,13 +39,11 @@ public class PaymentController {
 
             SessionCreateParams.Builder builder = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("http://localhost:3000")
-                    .setCancelUrl("http://localhost:3000/notfound");
+                    .setSuccessUrl("https://galaxy-nema.vercel.app/")
+                    .setCancelUrl("https://galaxy-nema.vercel.app//notfound");
 
             for (Map<String, Object> ticket : tickets) {
                 System.out.println("Ticket: " + ticket);
-
-                // Ottieni i dettagli del ticket
                 Map<String, Object> postoASedereMap = (Map<String, Object>) ticket.get("postoASedere");
                 String fila = (String) postoASedereMap.get("fila");
                 String numeroPosto = (String) postoASedereMap.get("numeroPosto");
@@ -53,11 +51,8 @@ public class PaymentController {
                 String nome = (String) ticket.get("nome");
                 String cognome = (String) ticket.get("cognome");
                 Double price = Double.valueOf(ticket.get("price").toString());
-
-                // Calcola il prezzo in centesimi
                 Long priceInCents = Math.round(price * 100);
 
-                // Aggiungi la linea per ogni ticket
                 builder.addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
@@ -70,12 +65,8 @@ public class PaymentController {
                                 .build())
                         .build());
             }
-
-            // Serializza la lista di ticket in JSON
             ObjectMapper objectMapper = new ObjectMapper();
             String ticketsJson = objectMapper.writeValueAsString(tickets);
-
-            // Aggiungi metadati alla sessione Stripe
             builder.putMetadata("via", via)
                     .putMetadata("civico", civico)
                     .putMetadata("cap", cap)
@@ -85,11 +76,9 @@ public class PaymentController {
                     .putMetadata("id_utente", userId.toString())
                     .putMetadata("ticket", ticketsJson);  // Assicurati che "ticket" sia una stringa JSON
 
-            // Crea la sessione Stripe
             SessionCreateParams params = builder.build();
             Session session = Session.create(params);
 
-            // Restituisci la risposta con l'id della sessione e l'url
             return ResponseEntity.ok(Map.of("id", session.getId(), "url", session.getUrl()));
         } catch (StripeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
