@@ -40,7 +40,7 @@ public class PaymentController {
             SessionCreateParams.Builder builder = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
                     .setSuccessUrl("https://galaxy-nema.vercel.app/")
-                    .setCancelUrl("https://galaxy-nema.vercel.app//notfound");
+                    .setCancelUrl("https://galaxy-nema.vercel.app/notfound");
 
             for (Map<String, Object> ticket : tickets) {
                 System.out.println("Ticket: " + ticket);
