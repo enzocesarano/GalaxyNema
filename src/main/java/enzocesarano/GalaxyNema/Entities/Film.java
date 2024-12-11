@@ -58,7 +58,7 @@ public class Film {
     @JsonManagedReference
     private Utente admin;
 
-    public Film(String titolo, String descrizione, int durata, GenereFilm genere, LocalDate data_uscita, String poster_url, String trailer_url) {
+    public Film(String titolo, String descrizione, int durata, GenereFilm genere, LocalDate data_uscita, String poster_url, String trailer_url, String backdrop_url) {
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.durata = durata;
@@ -66,6 +66,7 @@ public class Film {
         this.dataUscita = data_uscita;
         this.poster_url = poster_url;
         this.trailer_url = trailer_url;
+        this.backdrop_url = backdrop_url;
     }
 }
 

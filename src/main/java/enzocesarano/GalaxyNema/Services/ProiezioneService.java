@@ -69,8 +69,8 @@ public class ProiezioneService {
 
         Film film = this.filmService.findById(id_film);
 
-        LocalDate dataProiezione = body.data_proiezione();
-        LocalTime oraInizioTime = LocalTime.parse(body.ora_inizio(), DateTimeFormatter.ofPattern("HH:mm"));
+        LocalDate dataProiezione = body.dataProiezione();
+        LocalTime oraInizioTime = LocalTime.parse(body.oraInizio(), DateTimeFormatter.ofPattern("HH:mm"));
         LocalDateTime oraInizio = dataProiezione.atTime(oraInizioTime);
         LocalDateTime oraFine = oraInizio.plusMinutes(film.getDurata() + 30);
 
@@ -110,8 +110,8 @@ public class ProiezioneService {
 
         Film film = this.filmService.findById(id_film);
 
-        LocalDate dataProiezione = body.data_proiezione();
-        LocalTime oraInizioTime = LocalTime.parse(body.ora_inizio(), DateTimeFormatter.ofPattern("HH:mm"));
+        LocalDate dataProiezione = body.dataProiezione();
+        LocalTime oraInizioTime = LocalTime.parse(body.oraInizio(), DateTimeFormatter.ofPattern("HH:mm"));
         LocalDateTime oraInizio = dataProiezione.atTime(oraInizioTime);
         LocalDateTime oraFine = oraInizio.plusMinutes(film.getDurata() + 30);
 

@@ -115,6 +115,19 @@ public class UtenteController {
         return this.filmService.saveFilm(body, currentAuthenticatedUtente);
     }
 
+    @PutMapping("/me/films/{id_film}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Film updateFilm(@AuthenticationPrincipal Utente currentAuthenticatedUtente,
+                           @PathVariable("id_film") UUID id_film,
+                           @RequestBody @Validated FilmDTO body,
+                           BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            validationResult.getAllErrors().forEach(System.out::println);
+            throw new BadRequestException("Errore nei dati forniti!");
+        }
+        return this.filmService.findByIdAndUpdate(currentAuthenticatedUtente, id_film, body);
+    }
+
     @DeleteMapping("/me/films/{id_film}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFilm(@AuthenticationPrincipal Utente currentAuthenticatedUtente,

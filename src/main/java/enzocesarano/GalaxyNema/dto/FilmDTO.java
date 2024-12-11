@@ -22,7 +22,7 @@ public record FilmDTO(
         GenereFilm genere,
 
         @NotNull(message = "La data di uscita è obbligatoria.")
-        LocalDate data_uscita,
+        LocalDate dataUscita,
 
         @NotBlank(message = "L'URL del poster non può essere vuoto.")
         @Pattern(
@@ -31,6 +31,8 @@ public record FilmDTO(
         )
         String poster_url,
 
-        String trailer_url
+        String trailer_url,
+
+        String backdrop_url
 ) {
 }

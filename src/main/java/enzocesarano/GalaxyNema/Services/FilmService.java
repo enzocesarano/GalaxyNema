@@ -120,12 +120,12 @@ public class FilmService {
                     throw new BadRequestException("Il Film " + body.titolo() + " è già presente.");
                 }
         );
-        Film newFilm = new Film(body.titolo(), body.descrizione(), body.durata(), body.genere(), body.data_uscita(), body.poster_url(), body.trailer_url());
+        Film newFilm = new Film(body.titolo(), body.descrizione(), body.durata(), body.genere(), body.dataUscita(), body.poster_url(), body.trailer_url(), body.backdrop_url());
         newFilm.setAdmin(admin);
         return this.filmRepository.save(newFilm);
     }
 
-    public Film findByIdAndUpdate(UUID id_film, FilmDTO body) {
+    public Film findByIdAndUpdate(Utente utente, UUID id_film, FilmDTO body) {
         Film film = this.findById(id_film);
 
         if (!film.getTitolo().equals(body.titolo())) {
@@ -140,7 +140,7 @@ public class FilmService {
         film.setDescrizione(body.descrizione());
         film.setDurata(body.durata());
         film.setGenere(body.genere());
-        film.setDataUscita(body.data_uscita());
+        film.setDataUscita(body.dataUscita());
         film.setPoster_url(body.poster_url());
         film.setTrailer_url(body.trailer_url());
         return this.filmRepository.save(film);

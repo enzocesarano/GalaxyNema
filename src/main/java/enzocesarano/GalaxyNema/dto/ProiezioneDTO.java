@@ -9,10 +9,10 @@ import java.time.LocalDate;
 public record ProiezioneDTO(
         @NotNull(message = "La data della proiezione non può essere null.")
         @FutureOrPresent(message = "La data della proiezione deve essere una data futura.")
-        LocalDate data_proiezione,
+        LocalDate dataProiezione,
 
         @NotNull(message = "L'ora di inizio non può essere null.")
-        String ora_inizio,
+        String oraInizio,
 
         @Positive(message = "Il moltiplicatore di prezzo deve essere un valore positivo.")
         double moltiplicatore_prezzo) {

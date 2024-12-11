@@ -50,7 +50,8 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
                 new AntPathMatcher().match("/films/**", request.getServletPath()) ||
                 new AntPathMatcher().match("/proiezioni/**", request.getServletPath()) ||
                 new AntPathMatcher().match("/api/**", request.getServletPath()) ||
-                new AntPathMatcher().match("/webhook**", request.getServletPath());
+                new AntPathMatcher().match("/webhook**", request.getServletPath()) ||
+                new AntPathMatcher().match("/sale/**", request.getServletPath());
     }
 }
 
