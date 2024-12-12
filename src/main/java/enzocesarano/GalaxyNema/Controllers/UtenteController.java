@@ -156,6 +156,27 @@ public class UtenteController {
         this.proiezioneService.findByIdAndDelete(id_proiezione, currentAuthenticatedUtente);
     }
 
+    @PutMapping("/me/proiezioni/{id_proiezione}")
+    @ResponseStatus(HttpStatus.OK)
+    public Proiezione updateProiezione(
+            @PathVariable("id_proiezione") UUID idProiezione,
+            @RequestParam("id_sala") UUID idSala,
+            @RequestParam("id_film") UUID idFilm,
+            @RequestBody ProiezioneDTO proiezioneDTO,
+            BindingResult validationResult,
+            @AuthenticationPrincipal Utente currentAuthenticatedUtente) {
+        if (validationResult.hasErrors()) {
+            validationResult.getAllErrors().forEach(System.out::println);
+            throw new BadRequestException("Errore nei dati forniti!");
+        }
+        return this.proiezioneService.findByIdAndUpdate(
+                idProiezione,
+                proiezioneDTO,
+                idSala,
+                idFilm,
+                currentAuthenticatedUtente);
+    }
+
     @GetMapping("me/films/preferiti")
     public List<Film> getPreferiti(@AuthenticationPrincipal Utente utente) {
         return utente.getPreferiti();
