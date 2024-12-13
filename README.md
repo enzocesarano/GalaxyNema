@@ -99,8 +99,6 @@ Il progetto è organizzato in pacchetti, ognuno dei quali ha una responsabilità
    mvn spring-boot:run
    ```
 
-   Il backend sarà disponibile su [http://localhost:8080](http://localhost:8080).
-
 ## Contributi
 
 Se desideri contribuire al progetto, segui questi passi:
