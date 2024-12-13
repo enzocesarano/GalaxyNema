@@ -1,3 +1,5 @@
+# 🌜 GALAXYNEMA PROJECT 🎬
+
 ## Descrizione del Progetto
 
 Galaxy Nema è un'applicazione backend progettata per gestire un sistema di prenotazione di biglietti per film. Consente agli utenti di registrarsi, effettuare il login, visualizzare film e proiezioni, acquistare biglietti e gestire il proprio profilo. Utilizza tecnologie moderne e un'architettura RESTful per fornire un'interfaccia semplice e intuitiva.
